@@ -1,0 +1,31 @@
+﻿@* Това казва на View-то, че очаква списък с филми *@
+@model List<MyMovieLibrary.Models.Movie>
+
+@{
+    ViewData["Title"] = "My Movie Library";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Director</th>
+            <th>Year</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @* Циклим през всеки филм, който контролерът ни подаде *@
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Director</td>
+                <td>@movie.Year</td>
+                <td>@movie.Rating / 10</td>
+            </tr>
+        }
+    </tbody>
+</table>

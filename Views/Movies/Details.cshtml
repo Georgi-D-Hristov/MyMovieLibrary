@@ -1,0 +1,47 @@
+﻿@* Този път моделът е ЕДИН филм, не списък *@
+@model MyMovieLibrary.Models.Movie
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Model.Title</h1>
+
+<div>
+    <h4>Movie Details</h4>
+    <hr />
+    <dl class_="" row"">
+        <dt class_="" col-sm-2"">
+            Director
+        </dt>
+        <dd class_="" col-sm-10"">
+            @Model.Director
+        </dd>
+
+        <dt class_="" col-sm-2"">
+            Year
+        </dt>
+        <dd class_="" col-sm-10"">
+            @Model.Year
+        </dd>
+
+        <dt class_="" col-sm-2"">
+            Genre
+        </dt>
+        <dd class_="" col-sm-10"">
+            @Model.Genre
+        </dd>
+
+        <dt class_="" col-sm-2"">
+            Rating
+        </dt>
+        <dd class_="" col-sm-10"">
+            @Model.Rating / 10
+        </dd>
+    </dl>
+</div>
+
+<div>
+    @* Линк, който връща обратно към списъка *@
+    <a asp-action="Index">Back to List</a>
+</div>
