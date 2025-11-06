@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyMovieLibrary.Data;
-using MyMovieLibrary.Models; // <-- 1. Добави using за твоите модели
+using MyMovieLibrary.Models;
+using System.Threading.Tasks; // <-- 1. Добави using за твоите модели
 
 namespace MyMovieLibrary.Controllers
 {
@@ -47,13 +48,41 @@ namespace MyMovieLibrary.Controllers
         // Този метод приема данните от изпратената форма
         [HttpPost] // Този атрибут казва, че методът отговаря само на POST заявки
         [ValidateAntiForgeryToken] // Добавя защита срещу CSRF атаки
-        public Task<IActionResult> Create(Movie movie)
+        public async Task<IActionResult> Create(Movie movie)
         {
             _context.Movies.Add(movie);
 
             await _context.SaveChangesAsync();
 
             // 3. Пренасочваме потребителя обратно към списъка (Index)
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (movie==null)
+            {
+                return NotFound();
+            }
+
+            return View(movie);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Movie movie)
+        {
+            if (id != movie.Id)
+            {
+                return NotFound();
+            }
+
+            _context.Update(movie);
+
+            await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
     }
