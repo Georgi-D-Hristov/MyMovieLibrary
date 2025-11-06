@@ -38,5 +38,30 @@ namespace MyMovieLibrary.Controllers
             // Подаваме филма към View-то
             return View(movie);
         }
+
+        // GET: /Movies/Create
+        // Този метод просто показва празната форма
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: /Movies/Create
+        // Този метод приема данните от изпратената форма
+        [HttpPost] // Този атрибут казва, че методът отговаря само на POST заявки
+        [ValidateAntiForgeryToken] // Добавя защита срещу CSRF атаки
+        public IActionResult Create(Movie movie)
+        {
+            // 1. Изчисляваме ново ID. (В истинска база данни, това става автоматично)
+            // Взимаме най-голямото ID досега и добавяме 1.
+            int newId = _movies.Any() ? _movies.Max(m => m.Id) + 1 : 1;
+            movie.Id = newId;
+
+            // 2. Добавяме новия филм към нашия "фалшив" списък
+            _movies.Add(movie);
+
+            // 3. Пренасочваме потребителя обратно към списъка (Index)
+            return RedirectToAction("Index");
+        }
     }
 }
