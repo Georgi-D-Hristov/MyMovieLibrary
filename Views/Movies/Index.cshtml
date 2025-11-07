@@ -23,7 +23,8 @@
 			<tr>
 				<td>
 					<a asp-action="Details" asp-route-id="@movie.Id">Details</a> |
-					<a asp-action="Edit" asp-route-id="@movie.Id">Edit</a>
+					<a asp-action="Edit" asp-route-id="@movie.Id">Edit</a> |
+					<a asp-action="Delete" asp-route-id="@movie.Id" class="text-danger">Delete</a>
 				</td>
 
 				<td>@movie.Director</td>
