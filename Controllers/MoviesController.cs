@@ -28,7 +28,7 @@ namespace MyMovieLibrary.Controllers
         public async Task<IActionResult> Details(int id)
         {
             // Намираме филма по ID
-            Movie movie =await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
+            Movie movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 return NotFound(); // Ако не е намерен, връщаме 404
@@ -62,7 +62,7 @@ namespace MyMovieLibrary.Controllers
         {
             var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (movie==null)
+            if (movie == null)
             {
                 return NotFound();
             }
@@ -84,6 +84,31 @@ namespace MyMovieLibrary.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return View(movie);
+        }
+
+        // POST: /Movies/Delete/5
+        [HttpPost, ActionName("Delete")] // Казваме на ASP.NET: "Този метод отговаря на POST заявка към /Movies/Delete"
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie != null)
+            {
+                _context.Movies.Remove(movie); // Маркираме го за изтриване
+                await _context.SaveChangesAsync(); // Изпълняваме DELETE заявката към базата
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
