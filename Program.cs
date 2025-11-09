@@ -15,7 +15,18 @@ builder.Services.AddControllersWithViews();
 // Регистрираме услугите, необходими за Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// --------------------
+
+// ---------CORS----------------------------
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000", "http://localhost:4200", "http://localhost:5173") // Портовете на React/Angular/Vite
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -41,6 +52,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("AllowFrontend"); // Активираме CORS политиката
 
 app.UseAuthorization();
 
