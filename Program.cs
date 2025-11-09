@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyMovieLibrary.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +11,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// --- ДОБАВИ ТОВА ---
+// Регистрираме услугите, необходими за Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+// --------------------
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,6 +26,18 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+else
+{
+    // Активираме Swagger само в Development режим
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+// -----------------------------
 
 app.UseHttpsRedirection();
 app.UseRouting();
