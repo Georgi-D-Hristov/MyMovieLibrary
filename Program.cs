@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MyMovieLibrary.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +9,33 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
+
+// 1. Регистриране на Identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+// 2. Настройка на JWT Authentication
+// В реално приложение този ключ трябва да е таен и дълъг, и да се чете от appsettings.json!
+var jwtKey = "TovaEmnogoDylgaTajnaParolaZaTokenite123!";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false; // За development може false
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        ValidateIssuer = false, // За простота сега не валидираме издателя
+        ValidateAudience = false, // и получателя
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -55,6 +84,7 @@ app.UseRouting();
 
 app.UseCors("AllowFrontend"); // Активираме CORS политиката
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
