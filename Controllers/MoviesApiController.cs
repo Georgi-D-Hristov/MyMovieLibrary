@@ -1,13 +1,14 @@
 ﻿namespace MyMovieLibrary.Controllers
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using MyMovieLibrary.Data;
     using MyMovieLibrary.Models;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -42,6 +43,7 @@
         }
 
         // PUT: api/MoviesApi/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie(int id, Movie movie)
         {
@@ -73,6 +75,7 @@
 
         // POST: api/MoviesApi
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Movie>> PostMovie(Movie movie)
         {
             _context.Movies.Add(movie);
@@ -82,6 +85,7 @@
         }
 
         // DELETE: api/MoviesApi/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
